@@ -23,7 +23,6 @@ void setup() {
 
 void draw() {
   background(255);
-  System.out.println(initialPointY);
   
   boolean hasToBounceX = counterX < leftLimitX || counterX > rightLimitX;
   
