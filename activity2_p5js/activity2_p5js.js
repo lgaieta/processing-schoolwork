@@ -33,6 +33,7 @@ function draw() {
   }
 
   line(initialPointX, initialPointY, counterX, getY(counterX, height * 0.8, initialPointX, initialPointY));
+  ellipse(counterX, getY(counterX, height * 0.8, initialPointX, initialPointY), 40, 40);
 
   counterX += 9 * directionX;
 }
