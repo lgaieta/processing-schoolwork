@@ -4,8 +4,8 @@ class Circle {
   size = 20;
   directionX = 1;
   directionY = -1;
-  velocityX = 5;
-  velocityY = 5;
+  velocityX = 8;
+  velocityY = 8;
 
   move() {
     this.x += this.velocityX * this.directionX;
@@ -131,45 +131,26 @@ function checkBricksCollisions(inputBricks) {
 
       if (currentBrick.isDestroyed) continue;
 
-      const isCollisioningBottom =
-        circleObj.getTop() < currentBrick.getBottom() &&
-        circleObj.getTop() > currentBrick.getTop() + currentBrick.height / 2 &&
-        circleObj.x > currentBrick.getLeft() &&
-        circleObj.x < currentBrick.getRight();
-
-      const isCollisioningTop =
-        circleObj.getBottom() > currentBrick.getTop() &&
-        circleObj.getBottom() <
-          currentBrick.getTop() + currentBrick.height / 2 &&
-        circleObj.x > currentBrick.getLeft() &&
-        circleObj.x < currentBrick.getRight();
-
-      if (isCollisioningBottom || isCollisioningTop) {
-        circleObj.turnYDirection();
-        currentBrick.isDestroyed = true;
-      }
-      if (isCollisioningBottom) circleObj.y = currentBrick.getBottom();
-      if (isCollisioningTop) circleObj.y = currentBrick.getTop();
-
-      const isCollisioningLeft =
-        circleObj.getRight() > currentBrick.getLeft() &&
-        circleObj.getRight() <
-          currentBrick.getLeft() + currentBrick.width / 2 &&
-        circleObj.y > currentBrick.getTop() &&
-        circleObj.y < currentBrick.getBottom();
-
-      const isCollisioningRight =
-        circleObj.getLeft() < currentBrick.getRight() &&
-        circleObj.getLeft() > currentBrick.getLeft() + currentBrick.width / 2 &&
-        circleObj.y > currentBrick.getTop() &&
-        circleObj.y < currentBrick.getBottom();
-
-      if (isCollisioningLeft || isCollisioningRight) {
-        circleObj.turnXDirection();
-        currentBrick.isDestroyed = true;
-      }
-      if (isCollisioningLeft) circleObj.x = currentBrick.getLeft();
-      if (isCollisioningRight) circleObj.x = currentBrick.getRight();
+      checkBallCollisionWithRectangle({
+        ball: circleObj,
+        rectangle: currentBrick,
+        onLeft: () => {
+          circleObj.turnXDirection();
+          currentBrick.isDestroyed = true;
+        },
+        onRight: () => {
+          circleObj.turnXDirection();
+          currentBrick.isDestroyed = true;
+        },
+        onTop: () => {
+          circleObj.turnYDirection();
+          currentBrick.isDestroyed = true;
+        },
+        onBottom: () => {
+          circleObj.turnYDirection();
+          currentBrick.isDestroyed = true;
+        },
+      });
     }
   }
 }
@@ -188,7 +169,7 @@ function checkBallCollisionWithRectangle({
     ball.x > rectangle.getLeft() &&
     ball.x < rectangle.getRight();
 
-  if (isCollisioningTop) onTop();
+  if (isCollisioningTop) return onTop();
 
   const isCollisioningBottom =
     ball.getTop() < rectangle.getBottom() &&
@@ -196,7 +177,7 @@ function checkBallCollisionWithRectangle({
     ball.x > rectangle.getLeft() &&
     ball.x < rectangle.getRight();
 
-  if (isCollisioningBottom) onBottom();
+  if (isCollisioningBottom) return onBottom();
 
   const isCollisioningLeft =
     ball.getRight() > rectangle.getLeft() &&
@@ -204,7 +185,7 @@ function checkBallCollisionWithRectangle({
     ball.y > rectangle.getTop() &&
     ball.y < rectangle.getBottom();
 
-  if (isCollisioningLeft) onLeft();
+  if (isCollisioningLeft) return onLeft();
 
   const isCollisioningRight =
     ball.getLeft() < rectangle.getRight() &&
@@ -212,7 +193,7 @@ function checkBallCollisionWithRectangle({
     ball.y > rectangle.getTop() &&
     ball.y < rectangle.getBottom();
 
-  if (isCollisioningRight) onRight();
+  if (isCollisioningRight) return onRight();
 }
 
 function setup() {
